@@ -1,9 +1,9 @@
 package clInterface.executor
 
-import CodedOutputStream
-import RouteMetricRequest
+import algorithm.RouteData
 import objects.Car
 import objects.Environment
+import roomScanner.CarController
 import java.net.ConnectException
 
 class RouteMetric : CommandExecutor {
@@ -34,14 +34,10 @@ class RouteMetric : CommandExecutor {
             println("car with id=$id not found")
             return
         }
-        val routeMessage = getRouteMessage() ?: return
-        val requestBytes = ByteArray(routeMessage.getSizeNoTag())
-        routeMessage.writeTo(CodedOutputStream(requestBytes))
+        val routeData = getRouteMessage() ?: return
         try {
-            routeMessage.distances.forEachIndexed { idx, distance ->
-                val direction = roomScanner.CarController.Direction.values()
-                        .filter { it.id == routeMessage.directions[idx] }.first()
-                car.moveCar(distance, direction).get()
+            routeData.distances.forEachIndexed { idx, distance ->
+                car.moveCar(distance, routeData.directions[idx]).get()
             }
         } catch (e: ConnectException) {
             synchronized(Environment, {
@@ -50,17 +46,17 @@ class RouteMetric : CommandExecutor {
         }
     }
 
-    private fun getRouteMessage(): RouteMetricRequest? {
+    private fun getRouteMessage(): RouteData? {
         println(HELP_STRING)
         val distances = arrayListOf<Int>()
-        val directions = arrayListOf<Int>()
+        val directions = arrayListOf<CarController.Direction>()
         while (true) {
             val readLine = readLine()!!.toLowerCase()
             when (readLine) {
                 "reset" -> return null
                 "done" -> {
-                    val routeBuilder = RouteMetricRequest.BuilderRouteMetricRequest(distances.toIntArray(), directions.toIntArray())
-                    return routeBuilder.build()
+                    val result = RouteData(distances.toIntArray(), directions.toTypedArray())
+                    return result
                 }
             }
             val wayPointData = readLine.split(" ")
@@ -76,12 +72,20 @@ class RouteMetric : CommandExecutor {
                 println("format error, you must print two number separated by spaces. Try again")
                 continue
             }
-            if (direction != 0 && direction != 1 && direction != 2 && direction != 3) {
+            distances.add(distance)
+            var directionCommand: CarController.Direction? = null
+            when (direction) {
+                0 -> directionCommand = CarController.Direction.FORWARD
+                1 -> directionCommand = CarController.Direction.BACKWARD
+                2 -> directionCommand = CarController.Direction.LEFT
+                3 -> directionCommand = CarController.Direction.RIGHT
+            }
+            if (directionCommand == null) {
                 println("direction $direction don't supported!")
                 println(HELP_STRING)
+                continue
             }
-            distances.add(distance)
-            directions.add(direction)
+            directions.add(directionCommand)
         }
     }
 

@@ -1,6 +1,5 @@
 package clInterface.executor
 
-import CodedOutputStream
 import SonarRequest
 import objects.Car
 import objects.Environment
@@ -30,11 +29,9 @@ class Sonar : CommandExecutor {
             println("car with id=$id not found")
             return
         }
-        val requestMessage = getSonarRequest() ?: return
-        val requestBytes = ByteArray(requestMessage.getSizeNoTag())
-        requestMessage.writeTo(CodedOutputStream(requestBytes))
+        val angles = getRequiredAngles() ?: return
         try {
-            car.scan(requestMessage.angles, requestMessage.attempts.first(), requestMessage.windowSize, requestMessage.smoothing)
+            car.scan(angles, 5, 3, SonarRequest.Smoothing.MEDIAN)
         } catch (e: ConnectException) {
             synchronized(Environment, {
                 Environment.map.remove(id)
@@ -42,7 +39,7 @@ class Sonar : CommandExecutor {
         }
     }
 
-    private fun getSonarRequest(): SonarRequest? {
+    private fun getRequiredAngles(): IntArray? {
         println("print angles, after printing all angles print done")
         val angles = arrayListOf<Int>()
         while (true) {
@@ -50,8 +47,7 @@ class Sonar : CommandExecutor {
             when (command) {
                 "reset" -> return null
                 "done" -> {
-                    val sonarBuilder = SonarRequest.BuilderSonarRequest(angles.toIntArray(), IntArray(angles.size, { 5 }), 3, SonarRequest.Smoothing.MEDIAN)
-                    return sonarBuilder.build()
+                    return angles.toIntArray()
                 }
                 else -> {
                     try {

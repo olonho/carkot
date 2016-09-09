@@ -17,7 +17,6 @@ class McTransport() : MCConnectObserver<String> {
         writeStream.write(js("new Buffer(bytes)"))
     }
 
-
     fun sendProtoBuf(message: DebugRequest) {
         val typeMessage = getProtoBufTypeMessage(TaskRequest.Type.DEBUG)
         sendProtoBufType(typeMessage)

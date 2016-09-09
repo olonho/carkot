@@ -37,5 +37,3 @@ This command run gradle build and execute *npm install* for downloading used js 
 for run server you can use script
 
     $ ./run.sh
-
-

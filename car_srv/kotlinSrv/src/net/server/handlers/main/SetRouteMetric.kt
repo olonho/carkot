@@ -2,6 +2,7 @@ package net.server.handlers.main
 
 import CodedInputStream
 import McState
+import RouteMetricRequest
 import RouteResponse
 import control.Controller
 import encodeProtoBuf

@@ -4,8 +4,10 @@ import net.server.handlers.AbstractHandler
 import net.server.handlers.debug.Memory
 import net.server.handlers.debug.Sonar
 import net.server.handlers.flash.LoadBin
-import net.server.handlers.main.*
-import net.server.handlers.rc.Control
+import net.server.handlers.main.GetSonarData
+import net.server.handlers.main.SetRoute
+import net.server.handlers.main.SetRouteMetric
+import net.server.handlers.main.SonarExplore
 
 val carServerPort: Int = 8888
 val mainServerPort = 7925
@@ -22,7 +24,6 @@ fun main(args: Array<String>) {
     val carController = ControllerToUsb()
 
     val handlers = mutableMapOf<String, AbstractHandler>()
-    handlers.put("/rc/control", Control())
     handlers.put("/loadBin", LoadBin())
     handlers.put("/sonar", GetSonarData(carController))
     handlers.put("/sonarExplore", SonarExplore(carController))

@@ -2,8 +2,8 @@ package control
 
 import RouteMetricRequest
 import RouteRequest
-import SonarRequest
 import SonarExploreAngleRequest
+import SonarRequest
 
 interface Controller {
     fun executeRoute(route: RouteRequest, callback: (ByteArray) -> Unit)

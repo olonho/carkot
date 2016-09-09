@@ -1,9 +1,6 @@
 @native
 fun require(name: String): dynamic = noImpl
 
-@native
-fun setTimeout(callBack: () -> Unit, ms: Int): dynamic = noImpl
-
 fun <T> encodeProtoBuf(protoMessage: T): ByteArray {
     val routeBytes: ByteArray
     when (protoMessage) {

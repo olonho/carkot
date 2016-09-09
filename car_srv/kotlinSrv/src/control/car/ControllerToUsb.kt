@@ -2,8 +2,8 @@ package control.car
 
 import RouteMetricRequest
 import RouteRequest
-import SonarRequest
 import SonarExploreAngleRequest
+import SonarRequest
 import control.Controller
 import mcTransport
 

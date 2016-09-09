@@ -6,8 +6,8 @@ import algorithm.geometry.Angle
 import algorithm.geometry.Line
 import algorithm.geometry.Vector
 import objects.Car
-import org.asynchttpclient.ListenableFuture
-import org.asynchttpclient.Response
+import objects.RouteMetricResponse
+import objects.SonarDataResponse
 import roomScanner.CarController
 import roomScanner.CarController.Direction.*
 import roomScanner.serialize
@@ -18,7 +18,7 @@ class CarEmulator(uid: Int, val testRoom: EmulatedRoom, val useRandom: Boolean, 
     private var yReal = 0.0
     private var angleReal = Angle(0)
 
-    override fun moveCar(distance: Int, direction: CarController.Direction): ListenableFuture<Response> {
+    override fun moveCar(distance: Int, direction: CarController.Direction): RouteMetricResponse {
         val randomMultiplier = if (useRandom) randomGenerator.nextInt(900, 1100).toDouble() / 1000.0 else 1.0
         val distanceWithRandom = (randomMultiplier * distance).toInt()
         when (direction) {
@@ -33,10 +33,10 @@ class CarEmulator(uid: Int, val testRoom: EmulatedRoom, val useRandom: Boolean, 
             LEFT -> angleReal += Angle(distanceWithRandom)
             RIGHT -> angleReal -= Angle(distanceWithRandom)
         }
-        return ListenableFutureEmulator(ByteArray(0))
+        return RouteMetricResponse(ListenableFutureEmulator(ByteArray(0)))
     }
 
-    override fun scan(angles: IntArray, attempts: Int, windowSize: Int, smoothing: SonarRequest.Smoothing): ListenableFuture<Response> {
+    override fun scan(angles: IntArray, attempts: Int, windowSize: Int, smoothing: SonarRequest.Smoothing): SonarDataResponse {
 
         val xSensor0 = xReal
         val ySensor0 = yReal
@@ -78,7 +78,7 @@ class CarEmulator(uid: Int, val testRoom: EmulatedRoom, val useRandom: Boolean, 
         val responseMessage = SonarResponse.BuilderSonarResponse(distances.toIntArray()).build()
         val bytes = serialize(responseMessage.getSizeNoTag(), { responseMessage.writeTo(it) })
 
-        return ListenableFutureEmulator(bytes)
+        return SonarDataResponse(ListenableFutureEmulator(bytes))
     }
 
     private fun getDistance(xSensor0: Double, ySensor0: Double, sensorLine: Line, sensorVector: Vector): Int {

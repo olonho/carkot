@@ -4,6 +4,8 @@ import SonarRequest
 import objects.Car
 import objects.Environment
 import java.net.ConnectException
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Sonar : CommandExecutor {
 
@@ -31,7 +33,10 @@ class Sonar : CommandExecutor {
         }
         val angles = getRequiredAngles() ?: return
         try {
-            car.scan(angles, 5, 3, SonarRequest.Smoothing.MEDIAN)
+            val sonarResult = car.scan(angles, 5, 3, SonarRequest.Smoothing.MEDIAN)
+            val distances = sonarResult.get(2, TimeUnit.MINUTES)
+            println("angles   : ${Arrays.toString(angles)}")
+            println("distances: ${Arrays.toString(distances)}")
         } catch (e: ConnectException) {
             synchronized(Environment, {
                 Environment.map.remove(id)

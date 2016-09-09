@@ -1,9 +1,7 @@
 package algorithm
 
-import CodedInputStream
 import Logger
 import SonarRequest
-import SonarResponse
 import algorithm.geometry.Angle
 import algorithm.geometry.AngleData
 import objects.Car
@@ -36,17 +34,14 @@ abstract class AbstractAlgorithm(val thisCar: Car) {
             return
         }
         val angles = getAngles()
-        val future = thisCar.scan(angles.map { it.degs() }.toIntArray(), ATTEMPTS, WINDOW_SIZE, SMOOTHING)
-        val bytes: ByteArray
+        val sonarResult = thisCar.scan(angles.map { it.degs() }.toIntArray(), ATTEMPTS, WINDOW_SIZE, SMOOTHING)
+        val distances: IntArray
         try {
-            bytes = future.get(300, TimeUnit.SECONDS).responseBodyAsBytes
+            distances = sonarResult.get(300, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
             println("time out")
             return
         }
-        val sonarResponse = SonarResponse.BuilderSonarResponse(IntArray(0)).build()
-        sonarResponse.mergeFrom(CodedInputStream(bytes))
-        val distances = sonarResponse.distances
 
         if (distances.size != angles.size) {
             throw RuntimeException("error! angles and distances have various sizes")

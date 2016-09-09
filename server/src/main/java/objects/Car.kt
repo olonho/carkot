@@ -11,7 +11,7 @@ abstract class Car(val uid: Int) {
     var y = 0.0
     var angle = 0.0
 
-    abstract fun moveCar(distance: Int, direction: CarController.Direction): ListenableFuture<Response>
+    abstract fun moveCar(distance: Int, direction: CarController.Direction): RouteMetricResponse
 
-    abstract fun scan(angles: IntArray, attempts: Int, windowSize: Int, smoothing: SonarRequest.Smoothing): ListenableFuture<Response>
+    abstract fun scan(angles: IntArray, attempts: Int, windowSize: Int, smoothing: SonarRequest.Smoothing): SonarDataResponse
 }

@@ -10,13 +10,13 @@ import objects.Environment
 class GetRoomModel : Handler {
 
     override fun execute(bytesFromClient: ByteArray): ByteArray {
-        val protoMessage = getDebugInfo()
+        val protoMessage = getModelInfo()
         val result = ByteArray(protoMessage.getSizeNoTag())
         protoMessage.writeTo(CodedOutputStream(result))
         return result
     }
 
-    private fun getDebugInfo(): DebugResponse {
+    private fun getModelInfo(): DebugResponse {
 
         val points = RoomModel.walls.flatMap({ it.points }).toTypedArray()
 

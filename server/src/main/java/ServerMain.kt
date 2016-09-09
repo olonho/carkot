@@ -6,7 +6,7 @@ import objects.CarReal
 import objects.Environment
 import objects.emulator.CarEmulator
 import objects.emulator.EmulatedRoom
-import objects.emulator.Rng
+import objects.emulator.SeedRandomGenerator
 import roomScanner.CarController
 import roomScanner.RoomScanner
 
@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
     setClOptions(clParser)
     val argsConfig = clParser.parse(args)
     if (!argsConfig.success() || argsConfig.getBoolean("help")) {
-        println(clParser.getHelp())
+        println(clParser.help)
         return
     }
     if (argsConfig.getBoolean("emulator")) {
@@ -26,10 +26,10 @@ fun main(args: Array<String>) {
         val carUid = 1
         val emulatedRoom = EmulatedRoom.EmulatedRoomFromFile(pathToRoomConfig)
         if (emulatedRoom == null) {
-            println("error parsin room from file $pathToRoomConfig")
+            println("error parsing room from file $pathToRoomConfig")
             return
         }
-        Environment.map.put(carUid, CarEmulator(carUid, emulatedRoom, useRandom, Rng(randomSeed)))
+        Environment.map.put(carUid, CarEmulator(carUid, emulatedRoom, useRandom, SeedRandomGenerator(randomSeed)))
     }
     var roomScanner: RoomScanner? = null
     val carServer = net.car.server.Server.createCarServerThread()

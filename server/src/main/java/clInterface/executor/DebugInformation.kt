@@ -4,10 +4,10 @@ import CodedInputStream
 import DebugRequest
 import DebugResponseMemoryStats
 import DebugResponseSonarStats
-import roomScanner.serialize
 import net.car.client.Client
 import objects.CarReal
 import objects.Environment
+import roomScanner.serialize
 import java.rmi.UnexpectedException
 
 class DebugInformation : CommandExecutor {
@@ -15,11 +15,10 @@ class DebugInformation : CommandExecutor {
     override fun execute(command: String) {
         val params = command.split(" ")
         val car = Environment.map[params[1].toInt()]!!
-        if (!(car is CarReal)) {
+        if (car !is CarReal) {
             return
         }
         val type = DebugRequest.Type.fromIntToType(params[2].toInt())
-
         val request = DebugRequest.BuilderDebugRequest(type).build()
         val requestType = when (type) {
             DebugRequest.Type.MEMORY_STATS -> Client.Request.DEBUG_MEMORY

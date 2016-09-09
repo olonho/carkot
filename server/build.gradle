@@ -26,18 +26,11 @@ sourceSets {
     main.kotlin.srcDirs += '../proto/protofiles_sources/out'
 }
 
-task getDeps(type: Copy) {
-    from sourceSets.main.compileClasspath
-    into 'build/libs'
-}
-task compileProto() {
-    exec {
-        executable './../proto/protofiles_sources/compile_proto.sh'
-    }
+task compileProto(type: Exec) {
+    executable './../proto/protofiles_sources/compile_proto.sh'
 }
 
-build.dependsOn getDeps
-build.dependsOn compileProto
+compileKotlin.dependsOn compileProto
 
 jar {
     manifest {
@@ -45,9 +38,7 @@ jar {
                 "Implementation-Version": version,
                 "Main-Class": "ServerMainKt")
     }
-
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-
 }
 
 dependencies {

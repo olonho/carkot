@@ -16,8 +16,8 @@ class Vector constructor(var x: Double, var y: Double) {
 
     fun angleTo(other: Vector): Angle {
         val sp = scalarProduct(other)
-        val cosinus = sp / length() / other.length()
-        return Angle(Math.acos(cosinus))
+        val cos = sp / length() / other.length()
+        return Angle(Math.acos(cos))
     }
 
     fun inverse() {

@@ -25,10 +25,6 @@ class DirectionOrder : Handler {
             return protoBufToBytes(protoResponse)
         }
 
-        sendCarOrder(order.command)
-
-        // TODO: should be done as callback after sending net.car order
-        // Send update back
         return ByteArray(0)
     }
 
@@ -36,10 +32,5 @@ class DirectionOrder : Handler {
         val result = ByteArray(protoMessage.getSizeNoTag())
         protoMessage.writeTo(CodedOutputStream(result))
         return result
-    }
-
-    // TODO: stub!!
-    private fun sendCarOrder(cmd: DirectionRequest.Command) {
-        println("Sent order ${cmd.toString()}")
     }
 }

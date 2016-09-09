@@ -7,7 +7,6 @@ import SonarResponse
 import algorithm.geometry.Angle
 import algorithm.geometry.AngleData
 import objects.Car
-import objects.CarReal
 import roomScanner.CarController.Direction.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -22,18 +21,10 @@ abstract class AbstractAlgorithm(val thisCar: Car) {
     private val historySize = 10
     private val history = Stack<RouteData>()
 
-    private var prevState: CarState? = null
     private var prevSonarDistances = mapOf<Angle, AngleData>()
     private val defaultAngles = arrayOf(Angle(0), Angle(70), Angle(75), Angle(80), Angle(85), Angle(90), Angle(95), Angle(100), Angle(105), Angle(110), Angle(180))
 
     protected var requiredAngles = defaultAngles
-
-    protected enum class CarState {
-        WALL,
-        INNER,
-        OUTER
-
-    }
 
     private var iterationCounter = 0
 
@@ -67,13 +58,7 @@ abstract class AbstractAlgorithm(val thisCar: Car) {
 
         this.requiredAngles = defaultAngles
 
-        val state = getCarState(anglesDistances)
-
-        if (state == null) {
-            addCancelIterationToLog()
-            return
-        }
-        val command = getCommand(anglesDistances, state)
+        val command = getCommand(anglesDistances)
         if (command == null) {
             addCancelIterationToLog()
             return
@@ -91,7 +76,6 @@ abstract class AbstractAlgorithm(val thisCar: Car) {
         println(Arrays.toString(command.distances))
 
         this.prevSonarDistances = anglesDistances
-        this.prevState = state
 
         command.distances.forEachIndexed { idx, distance ->
             thisCar.moveCar(distance, command.directions[idx]).get()
@@ -155,21 +139,7 @@ abstract class AbstractAlgorithm(val thisCar: Car) {
         }
     }
 
-    protected fun rollback(steps: Int) {
-        Logger.log("=== Starting rollback for $steps steps ===")
-        Logger.indent()
-        var stepsRemaining = steps
-        while (stepsRemaining > 0 && history.size > 0) {
-            Logger.log("Step: ${steps - stepsRemaining + 1}")
-            rollback()
-            stepsRemaining--
-        }
-        Logger.outDent()
-        Logger.log("=== Finished rollback ===")
-    }
-
-    protected abstract fun getCarState(anglesDistances: Map<Angle, AngleData>): CarState?
-    protected abstract fun getCommand(anglesDistances: Map<Angle, AngleData>, state: CarState): RouteData?
+    protected abstract fun getCommand(anglesDistances: Map<Angle, AngleData>): RouteData?
     protected abstract fun afterGetCommand(route: RouteData)
     abstract fun isCompleted(): Boolean
 

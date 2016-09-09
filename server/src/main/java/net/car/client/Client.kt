@@ -28,5 +28,4 @@ object Client {
 
     fun makeRequest(request: String, data: ByteArray): ListenableFuture<Response> =
             client.preparePost(request).setBody(data).setRequestTimeout(TIMEOUT).execute() ?: throw UnexpectedException(request)
-
 }

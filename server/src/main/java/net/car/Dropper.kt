@@ -35,7 +35,7 @@ object Dropper {
         for (key in environment.map.keys) {
             try {
                 val carValue = environment.map[key] ?: continue
-                if (!(carValue is CarReal)) {
+                if (carValue !is CarReal) {
                     continue
                 }
                 carValue.carConnection.sendRequest(Client.Request.PING, ByteArray(0))

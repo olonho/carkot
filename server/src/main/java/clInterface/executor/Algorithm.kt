@@ -11,11 +11,13 @@ class Algorithm : CommandExecutor {
     override fun execute(command: String) {
         val params = command.split(" ")
         val count =
-                if (params.size == 2) try {
-                    params[1].toInt()
-                } catch (e: Exception) {
-                    1
-                } else 1
+                if (params.size == 2)
+                    try {
+                        params[1].toInt()
+                    } catch (e: NumberFormatException) {
+                        println("error parsing string \"${params[1]}\" to int")
+                        return
+                    } else 1
         if (algorithmThread.algorithmImpl == null) {
             algorithmThread.algorithmImpl = RoomBypassingAlgorithm(Environment.map.values.last())
             algorithmThread.start()

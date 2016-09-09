@@ -7,17 +7,11 @@ import javax.xml.parsers.DocumentBuilderFactory
 class EmulatedRoom() {
     val emulatedWalls = arrayListOf<EmulatedWall>()
 
-    constructor(EmulatedWalls: Collection<EmulatedWall>) : this() {
-        this.emulatedWalls.addAll(EmulatedWalls)
-    }
-
     companion object {
         fun EmulatedRoomFromFile(pathToFile: String): EmulatedRoom? {
-
-            val factory = DocumentBuilderFactory.newInstance()
-            val builder = factory.newDocumentBuilder()
-            val doc = builder.parse(File(pathToFile))
-            val root = doc.getDocumentElement()
+            val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+            val doc = docBuilder.parse(File(pathToFile))
+            val root = doc.documentElement
             val rootChild = root.childNodes
             var walls: Node? = null
             for (i in 0..rootChild.length - 1) {

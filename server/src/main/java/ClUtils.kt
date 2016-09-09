@@ -23,10 +23,10 @@ fun getOption(name: String, parser: StringParser, default: String, shortFlag: Ch
             .setDefault(default)
             .setRequired(required)
     if (shortFlag != null) {
-        result.setShortFlag(shortFlag)
+        result.shortFlag = shortFlag
     }
     if (!longFlag.equals("")) {
-        result.setLongFlag(longFlag)
+        result.longFlag = longFlag
     }
 
     return result

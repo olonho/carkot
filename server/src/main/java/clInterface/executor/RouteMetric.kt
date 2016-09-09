@@ -2,9 +2,7 @@ package clInterface.executor
 
 import CodedOutputStream
 import RouteMetricRequest
-import net.car.client.Client
 import objects.Car
-import objects.CarReal
 import objects.Environment
 import java.net.ConnectException
 

@@ -1,20 +1,14 @@
 package objects.emulator
 
-class Rng(seed: Long) {
+class SeedRandomGenerator(seed: Long) {
     var curState = seed
     val a = 1664525L
     val c = 1013904223L
     val mod = 2147483648L
 
-    fun abs(value: Long): Long {
-        if (value < 0)
-            return -value
-        return value
-    }
-
     fun nextInt(): Int {
         val res = curState
-        curState = abs(a * curState + c) % mod
+        curState = Math.abs(a * curState + c) % mod
         return (res % mod).toInt()
     }
 

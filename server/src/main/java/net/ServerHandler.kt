@@ -40,8 +40,8 @@ class ServerHandler(val handlers: Map<String, Handler>) : SimpleChannelInboundHa
 
     override fun channelRead0(ctx: ChannelHandlerContext, msg: Any) {
         if (msg is HttpRequest) {
-            path = msg.getUri()
-            method = msg.getMethod()
+            path = msg.uri
+            method = msg.method
         }
 
         if (msg is DefaultHttpContent) {

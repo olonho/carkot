@@ -18,7 +18,7 @@ fun RouteMetricRequest.toString(): String {
     for (i in distances.indices) {
         val dist = distances[i].toString()
         val dir = fromIntToDirection(directions[i])
-        res += "(" + dist + ", " + dir + ")"
+        res += "($dist, $dir)"
     }
 
     return res.joinToString("; ")

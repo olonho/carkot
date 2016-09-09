@@ -1,19 +1,19 @@
 package clInterface.executor
 
 import CodedInputStream
-import roomScanner.serialize
 import SonarExploreAngleRequest
 import SonarExploreAngleResponse
 import net.car.client.Client
 import objects.CarReal
 import objects.Environment
+import roomScanner.serialize
 
 class Explore : CommandExecutor {
 
     override fun execute(command: String) {
         val params = command.split(" ")
         val car = Environment.map[params[1].toInt()]!!
-        if (!(car is CarReal)) {
+        if (car !is CarReal) {
             return
         }
         val angle = params[2].toInt()

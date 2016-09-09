@@ -1,6 +1,5 @@
 package objects.emulator
 
-import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import org.asynchttpclient.ListenableFuture
 import org.asynchttpclient.Response
@@ -10,7 +9,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
-class ListenableFutureImpl(bytes: ByteArray) : ListenableFuture<Response> {
+class ListenableFutureEmulator(bytes: ByteArray) : ListenableFuture<Response> {
 
     val response = NettyResponse(null, null, listOf(EagerResponseBodyPart(Unpooled.copiedBuffer(bytes), true)))
 

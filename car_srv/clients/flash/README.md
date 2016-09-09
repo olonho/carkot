@@ -14,4 +14,4 @@ for run client you can use script
 
     $ ./run.sh
 
-run script without params or with --help to see available options
+run script with --help to see available options

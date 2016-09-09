@@ -6,18 +6,7 @@ import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.http.HttpRequest
 import java.net.ConnectException
 
-/**
- * Created by user on 7/8/16.
- */
-class Client constructor(host: String, port: Int) {
-
-    val host: String
-    val port: Int
-
-    init {
-        this.host = host
-        this.port = port
-    }
+class Client constructor(val host: String, val port: Int) {
 
     fun sendRequest(request: HttpRequest) {
         val group = NioEventLoopGroup(1)
@@ -30,13 +19,10 @@ class Client constructor(host: String, port: Int) {
             channel.closeFuture().sync()
         } catch (e: InterruptedException) {
             ClientHandler.requestResult.code = 2
-            ClientHandler.requestResult.stdErr = "command execution interrupted"
         } catch (e: ConnectException) {
             ClientHandler.requestResult.code = 1
-            ClientHandler.requestResult.stdErr = "don't can connect to server ($host:$port)"
         } finally {
             group.shutdownGracefully()
         }
     }
-
 }
